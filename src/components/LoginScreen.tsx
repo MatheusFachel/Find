@@ -20,20 +20,46 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setError(null);
     setInfo(null);
     setIsLoading(true);
+    
+    console.log('Tentando autenticar com:', { email, mode });
 
     try {
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        console.log('Iniciando login com Supabase...');
+        const { data, error } = await supabase.auth.signInWithPassword({ 
+          email, 
+          password 
+        });
+        
+        console.log('Resposta do login:', { 
+          sucesso: !error, 
+          temSessao: !!data?.session,
+          erro: error?.message 
+        });
+        
         if (error) throw error;
+        
         // sucesso: dispara callback (opcional) e deixa App cuidar via onAuthStateChange
         onLogin?.();
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        console.log('Iniciando cadastro com Supabase...');
+        const { data, error } = await supabase.auth.signUp({ 
+          email, 
+          password 
+        });
+        
+        console.log('Resposta do cadastro:', { 
+          sucesso: !error,
+          temUsuario: !!data?.user,
+          erro: error?.message 
+        });
+        
         if (error) throw error;
         setInfo('Conta criada com sucesso. Verifique seu email para confirmar, se necessário, e faça login.');
         setMode('login');
       }
     } catch (err: any) {
+      console.error('Erro na autenticação:', err);
       setError(err?.message || 'Ocorreu um erro. Tente novamente.');
     } finally {
       setIsLoading(false);

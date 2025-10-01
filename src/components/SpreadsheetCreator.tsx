@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, FileSpreadsheet, TrendingUp, DollarSign, CreditCard, ArrowLeft, RefreshCcw } from 'lucide-react';
 import SpreadsheetEditor from './SpreadsheetEditor';
 import { Spreadsheet } from '../types';
+import { SheetType } from '../types/sheets';
 import { createSpreadsheet as sbCreateSpreadsheet, deleteSpreadsheet as sbDeleteSpreadsheet, fetchSpreadsheets as sbFetchSpreadsheets } from '../lib/supabaseQueries';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,12 +10,14 @@ interface SpreadsheetCreatorProps {
   onBack: () => void;
   spreadsheets: Spreadsheet[];
   onUpdateSpreadsheets: (spreadsheets: Spreadsheet[]) => void;
+  initialType?: SheetType; // Tipo inicial selecionado (opcional)
 }
 
 const SpreadsheetCreator: React.FC<SpreadsheetCreatorProps> = ({ 
   onBack, 
   spreadsheets, 
-  onUpdateSpreadsheets 
+  onUpdateSpreadsheets,
+  initialType
 }) => {
   const [selectedSpreadsheet, setSelectedSpreadsheet] = useState<Spreadsheet | null>(null);
   const [syncing, setSyncing] = useState(false);

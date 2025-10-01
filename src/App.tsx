@@ -10,9 +10,11 @@ import RecentActivity from './components/RecentActivity';
 import MonthlyChart from './components/MonthlyChart';
 import Calculator from './components/Calculator';
 import SpreadsheetCreator from './components/SpreadsheetCreator';
+import SheetsPage from './pages/planilhas';
 import { useFinancialData } from './hooks/useFinancialData';
 import { useResizeObserver } from './hooks/useResizeObserver';
 import { supabase } from './lib/supabaseClient';
+import { SheetType } from './types/sheets';
 
 function App() {
   const [session, setSession] = useState<import('@supabase/supabase-js').Session | null>(null);
@@ -43,24 +45,64 @@ function App() {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+    
+    // Adicionar ouvinte de evento para navegação entre telas
+    const handleNavigation = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail === 'dashboard') {
+        setCurrentView('dashboard');
+      } else if (customEvent.detail === 'spreadsheets') {
+        setCurrentView('spreadsheets');
+      }
+    };
+    
+    window.addEventListener('navigate', handleNavigation);
 
-    return () => { sub.subscription.unsubscribe(); };
+    return () => { 
+      sub.subscription.unsubscribe();
+      window.removeEventListener('navigate', handleNavigation);
+    };
   }, []);
 
   const dashboardData = getDashboardData();
   const incomeTransactions = getIncomeTransactions();
   const expenseTransactions = getExpenseTransactions();
 
+  // Estado para o tipo de planilha ativa no criador
+  const [activeSheetCreator, setActiveSheetCreator] = useState<SheetType | null>(null);
+
+  // Adiciona logs para depuração da sessão
+  console.log('Estado da sessão:', session ? 'Autenticado' : 'Não autenticado');
+  
   if (!session) {
-    return <LoginScreen />;
+    console.log('Renderizando tela de login...');
+    return <LoginScreen onLogin={() => console.log('Login bem-sucedido!')} />;
   }
 
   if (currentView === 'spreadsheets') {
+    
+    // Se uma tela específica de criação de planilha estiver ativa
+    if (activeSheetCreator) {
+      return (
+        <SpreadsheetCreator 
+          onBack={() => setActiveSheetCreator(null)} 
+          spreadsheets={spreadsheets}
+          onUpdateSpreadsheets={updateSpreadsheets}
+          initialType={activeSheetCreator}
+        />
+      );
+    }
+    
+    // Nova tela principal de planilhas
     return (
-      <SpreadsheetCreator 
-        onBack={() => setCurrentView('dashboard')} 
-        spreadsheets={spreadsheets}
-        onUpdateSpreadsheets={updateSpreadsheets}
+      <SheetsPage 
+        onBack={() => setCurrentView('dashboard')}
+        onCreateSheet={(type) => setActiveSheetCreator(type)}
+        onOpenSheet={(id) => {
+          // Abrir uma planilha específica para edição
+          console.log(`Abrir planilha ${id}`);
+          // Implementação real dependeria de como as planilhas são editadas
+        }}
       />
     );
   }

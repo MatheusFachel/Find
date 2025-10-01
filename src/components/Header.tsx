@@ -17,11 +17,11 @@ const Header: React.FC = () => {
           </div>
           
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 transition-colors">
+            <a href="#" onClick={() => window.dispatchEvent(new CustomEvent('navigate', { detail: 'dashboard' }))} className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 transition-colors">
               <TrendingUp className="w-4 h-4" />
               <span className="font-medium">Dashboard</span>
             </a>
-            <a href="#" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors">
+            <a href="#" onClick={() => window.dispatchEvent(new CustomEvent('navigate', { detail: 'spreadsheets' }))} className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors">
               <Calendar className="w-4 h-4" />
               <span className="font-medium">Planilhas</span>
             </a>
