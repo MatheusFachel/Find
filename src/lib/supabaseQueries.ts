@@ -16,7 +16,7 @@ export async function fetchDivisions(): Promise<CapitalDivision[]> {
     .eq('user_id', userId)
     .order('created_at');
   if (error) throw error;
-  return (data ?? []).map(d => ({ ...d, amount: 0 }));
+  return (data ?? []).map(d => ({ ...d, amount: 0 })); // amount will be calculated based on percentage
 }
 
 export async function upsertDivisions(divisions: CapitalDivision[]) {

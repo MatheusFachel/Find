@@ -65,7 +65,26 @@ export const useFinancialData = () => {
           sbFetchTransactions(),
           sbFetchSpreadsheets(),
         ]);
-        setDivisions(divs);
+        if (!divs || divs.length === 0) {
+          // seed from local or defaults to avoid empty flicker
+          const savedDivisions = localStorage.getItem('financeflow_divisions');
+          let seed: CapitalDivision[] | null = null;
+          if (savedDivisions) {
+            try { seed = JSON.parse(savedDivisions); } catch { seed = null; }
+          }
+          if (!seed || seed.length === 0) {
+            seed = [
+              { id: '1', name: 'Gastos Essenciais', percentage: 50, amount: 0, color: '#10B981' },
+              { id: '2', name: 'Poupança', percentage: 20, amount: 0, color: '#3B82F6' },
+              { id: '3', name: 'Investimentos', percentage: 20, amount: 0, color: '#8B5CF6' },
+              { id: '4', name: 'Lazer', percentage: 10, amount: 0, color: '#F59E0B' }
+            ];
+          }
+          setDivisions(seed);
+          try { await sbUpsertDivisions(seed); } catch {}
+        } else {
+          setDivisions(divs);
+        }
         setTransactions(txs);
         setSpreadsheets(sps);
       } catch (e) {
@@ -92,15 +111,6 @@ export const useFinancialData = () => {
       try {
         if (isAuthenticated) {
           await sbUpsertDivisions(divisions);
-        } else {
-          // best-effort antigo para backend local (opcional)
-          await fetch('/api/capital-divisions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              divisions: divisions.map(d => ({ id: d.id, name: d.name, percentage: d.percentage, color: d.color }))
-            })
-          });
         }
       } catch {}
     };
@@ -135,12 +145,11 @@ export const useFinancialData = () => {
   };
 
   const updateDivisions = async (newDivisions: CapitalDivision[]) => {
-    setDivisions(newDivisions);
+    setDivisions(newDivisions); // optimistic
     try {
       if (isAuthenticated) {
         await sbUpsertDivisions(newDivisions);
-        const fresh = await sbFetchDivisions();
-        setDivisions(fresh);
+        // avoid immediate refetch to prevent flicker; rely on optimistic state
       }
     } catch {
       // manter estado local

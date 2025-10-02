@@ -128,7 +128,8 @@ export async function duplicateSheet(id: string): Promise<string> {
     
     // Copiar as linhas da planilha original
     if (sheet.rows.length > 0) {
-      const rowsData = sheet.rows.map(row => {
+      // Preparar os dados das linhas para inserção (sem os IDs)
+      sheet.rows.map(row => {
         const { id: _, ...rowData } = row;
         return rowData;
       });

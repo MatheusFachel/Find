@@ -11,9 +11,7 @@ import { Chart as ChartJS,
   ArcElement,
   Title, 
   Tooltip, 
-  Legend,
-  ChartData,
-  ChartOptions } from 'chart.js';
+  Legend } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 
 // Registrar componentes do Chart.js
@@ -39,7 +37,7 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ className = '' }) => {
   const [error, setError] = useState<string | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [period, setPeriod] = useState('6months');
-  const [groupBy, setGroupBy] = useState('month'); // usado na chamada da API
+  const [groupBy] = useState('month'); // usado na chamada da API
   const chartRef = useRef<HTMLDivElement>(null);
 
   // Buscar dados de análise
@@ -138,8 +136,8 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ className = '' }) => {
   const currentChart = analytics[currentSlide];
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-xl p-5 ${className}`}>
-      <div className="flex justify-between items-center mb-4">
+    <div className={`bg-white border border-gray-200 rounded-xl p-6 ${className}`}>
+      <div className="flex justify-between items-center mb-6">
         <h3 className="font-semibold text-gray-800">{currentChart.title}</h3>
         
         <div className="flex items-center gap-3">
@@ -169,7 +167,7 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ className = '' }) => {
         {/* Área do gráfico */}
         <div 
           ref={chartRef}
-          className="min-h-64 w-full py-4"
+          className="min-h-64 w-full py-4 px-8"
         >
           {analytics.length > 0 && analytics[currentSlide] && (() => {
             const chart = analytics[currentSlide];
@@ -287,7 +285,7 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ className = '' }) => {
         {/* Botões de navegação */}
         <button
           onClick={prevSlide}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50 border border-gray-100"
           aria-label="Gráfico anterior"
         >
           <ChevronLeft className="w-5 h-5 text-gray-600" />
@@ -295,7 +293,7 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ className = '' }) => {
         
         <button
           onClick={nextSlide}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-white shadow-md hover:bg-gray-50 border border-gray-100"
           aria-label="Próximo gráfico"
         >
           <ChevronRight className="w-5 h-5 text-gray-600" />

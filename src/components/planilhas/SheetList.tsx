@@ -299,7 +299,7 @@ const SheetList: React.FC<SheetListProps> = ({ type, onOpenSheet, onViewAll }) =
           <select
             className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             onChange={handlePeriodChange}
-            value={searchParams.period === 'all' ? 'all' : `${searchParams.period.month}-${searchParams.period.year}`}
+            value={searchParams.period === 'all' || !searchParams.period ? 'all' : `${searchParams.period.month}-${searchParams.period.year}`}
           >
             {generatePeriodOptions()}
           </select>

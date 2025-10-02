@@ -13,7 +13,7 @@ const CreateButtons: React.FC<CreateButtonsProps> = ({
   onCreateIncome
 }) => {
   return (
-    <div className="flex flex-wrap gap-4 mb-6">
+    <div className="flex flex-wrap gap-4 mb-8 px-1">
       {/* Botão Investimentos */}
       <button
         onClick={onCreateInvestments}

@@ -34,7 +34,7 @@ const CapitalDivisionCard: React.FC<CapitalDivisionCardProps> = ({
           id: Date.now().toString(),
           name: newDivision.name,
           percentage: newDivision.percentage,
-          // amount é derivado de totalIncome e percentage; manter 0 aqui evita inconsistência persistida
+          // amount é derivado de totalIncome e percentage; manter 0 evita inconsistências persistidas
           amount: 0,
           color
         }

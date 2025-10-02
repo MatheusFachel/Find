@@ -19,8 +19,17 @@ const SpreadsheetCreator: React.FC<SpreadsheetCreatorProps> = ({
   onUpdateSpreadsheets,
   initialType
 }) => {
+  // Usando initialType para definir o tipo inicial de planilha, se fornecido
   const [selectedSpreadsheet, setSelectedSpreadsheet] = useState<Spreadsheet | null>(null);
   const [syncing, setSyncing] = useState(false);
+  
+  // Efeito para usar o initialType quando fornecido
+  React.useEffect(() => {
+    if (initialType) {
+      console.log(`Tipo inicial selecionado: ${initialType}`);
+      // Aqui você pode adicionar lógica adicional se necessário
+    }
+  }, [initialType]);
 
   const spreadsheetTypes = [
     {

@@ -7,21 +7,19 @@ interface BackButtonProps {
 
 const BackButton: React.FC<BackButtonProps> = ({ fallback }) => {
   const handleBack = () => {
-    // Tenta usar history.back(), com fallback para a função fornecida
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      fallback();
-    }
+    // Agora sempre usamos a função fornecida diretamente para garantir o funcionamento
+    fallback();
   };
 
   return (
     <button
       onClick={handleBack}
-      className="flex items-center justify-center p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-      aria-label="Voltar para a página anterior"
+      className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+      aria-label="Voltar para o Dashboard"
+      type="button"
     >
-      <ArrowLeft className="w-5 h-5 text-gray-700" />
+      <ArrowLeft className="w-4 h-4" />
+      <span className="text-sm font-medium">Voltar ao Dashboard</span>
     </button>
   );
 };

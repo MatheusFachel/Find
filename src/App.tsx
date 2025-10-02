@@ -96,7 +96,12 @@ function App() {
     // Nova tela principal de planilhas
     return (
       <SheetsPage 
-        onBack={() => setCurrentView('dashboard')}
+        onBack={() => {
+          console.log('Navegando de volta para o Dashboard');
+          setCurrentView('dashboard');
+          // Disparar evento de navegação para componentes que possam estar ouvindo
+          window.dispatchEvent(new CustomEvent('navigate', { detail: 'dashboard' }));
+        }}
         onCreateSheet={(type) => setActiveSheetCreator(type)}
         onOpenSheet={(id) => {
           // Abrir uma planilha específica para edição

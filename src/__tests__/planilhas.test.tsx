@@ -1,5 +1,6 @@
-import React from 'react';
+// Esta linha foi removida porque React já é importado automaticamente
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import BackButton from '../components/planilhas/BackButton';
 import CreateButtons from '../components/planilhas/CreateButtons';
 import SheetList from '../components/planilhas/SheetList';
